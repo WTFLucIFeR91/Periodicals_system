@@ -1,0 +1,726 @@
+$(document).ready(function() {
+    "use strict";
+    // *******************************************************************************************************************************************************
+    // ================================================================ Карта товара =========================================================================
+    // *******************************************************************************************************************************************************
+    // слайдер
+
+    $("#lightSlider").lightSlider({
+        gallery: true,
+        item: 1,
+        loop: true,
+        slideMargin: 0,
+        thumbItem: 9,
+        mode: "fade",
+        prevHtml: '<img src="catalog/view/theme/peredplata/img/prev.png" alt="prev"></img>',
+        nextHtml: '<img src="catalog/view/theme/peredplata/img/next.png" alt="prev"></img>',
+        galleryMargin: 20,
+        thumbMargin: 20
+    });
+
+    // *********************************************************************
+    // ********************* Алгоритм работы промо *************************
+    // *********************************************************************
+
+    function validation(el) {
+        var value = $(el).val();
+        var regExp = /[0-9А-ЯҐЄІЇ\']/g;
+        var errorText = "Невірно введений промокод. Промокод має бути українською мовою та бути в верхньому регістрі.";
+
+        if (value.length > 0 && (value.toUpperCase() !== value || !value.match(regExp))) {
+            $(el).addClass("error");
+            $("#promo__help").removeClass("d-none").text(errorText);
+            $("#promo__btn").removeClass("btn-warning").addClass("btn-secondary").prop("disabled", true);
+        } else if (value.length === 0) {
+            $(el).removeClass("error");
+            $("#promo__help").addClass("d-none");
+            $("#promo__btn").removeClass("btn-warning").addClass("btn-secondary").prop("disabled", true);
+        } else {
+            $(el).removeClass("error");
+            $("#promo__help").addClass("d-none");
+            $("#promo__btn").addClass("btn-warning").removeClass("btn-secondary").prop("disabled", false);
+        }
+    }
+
+    $("#promo__text").on("input", function() {
+        validation(this);
+    });
+
+    $("#promo").on("submit", function(e) {
+        e.preventDefault();
+
+        var $form = $( this );
+        var $promoInput = $form.find("#promo__text");
+        var $promoBtn = $form.find("#promo__btn");
+        var $promoHelp = $form.find("#promo__help")
+        var value = $promoInput.val();
+        var body = {
+            promo: value,
+            product_id: $('#product-id').val(),
+        }
+        var posting = $.post( "index.php?route=product/product/checkPromo", body );
+        console.log(body);
+        posting.done(function( data ) {
+            success(data, $promoInput, $promoBtn, $promoHelp);
+        });
+
+        posting.fail(function() {
+            error($promoInput, $promoHelp);
+        })
+    });
+
+    var errorMessages = Object.freeze({
+        "wrong_promo": "Невірно введенний промокод!",
+        "promo_expired": "У промокода закінчився термін дії!",
+        "wrong_data": "Невірно введені данні!",
+    })
+
+    var deliveryValue = parseFloat($("#delivery-value-hidden").text());
+
+    function success(data, input, btn, help) {
+        var data = JSON.parse(data);
+        var dataKey = Object.keys(data)[0];
+
+        if(dataKey === "error") {
+            input.addClass("error");
+            help.removeClass("d-none").text(errorMessages[data[dataKey]]);
+        } else {
+            help.addClass("d-none")
+            input.prop("disabled", true);
+            btn.removeClass("btn-warning").addClass("btn-secondary").prop("disabled", true);
+            $("#index").val(data[dataKey].alt_index);
+            deliveryValue = data[dataKey].alt_price;
+            calculateTotal();
+        }
+    };
+
+    function error(input, help) {
+        input.addClass("error");
+        help.removeClass("d-none").text("Помилка запиту. Будь ласка, повторіть процес ще раз трохи пізніше!");
+    }
+
+
+    // *********************************************************************
+    // ******************* Алгоритм работы радиокнопок *********************
+    // *********************************************************************
+
+    function getResponse(element, cbFunc) {
+        var body = {
+            subs_type_id: $(element.target).val(),
+            publication_index: $('#publication-index').html(),
+            catalog_year: $('#catalog-year').val()
+        };
+        $.ajax({
+            url: "index.php?route=product/product/getProductByTypeSubs",
+            type: "POST",
+            data: body,
+            success: function success(json) {
+                var res = JSON.parse(json);
+                setProductData(res);
+                cleseCheckboxByDate();
+                setMsp();
+                closeFirstActiveInput();
+                calculateTotal();
+            },
+            error: function error(err) { // TODO: вывести ошибку
+                // console.log(err);
+            }
+        });
+    }
+
+    function setProductData(res) {
+        $('#product-id').val(res.product_id);
+        $('#period-produce').html(res.period_produce);
+        $('#subscription-term').html(res.msp + ' міс.');
+        $('#catalog-year').val(res.catalog_year);
+        $('#title-catalog-year').val(res.catalog_year);
+        $('#' + res.catalog_year + '-january').attr('data-avalible', res.vmonth1);
+        $('#' + res.catalog_year + '-february').attr('data-avalible', res.vmonth2);
+        $('#' + res.catalog_year + '-march').attr('data-avalible', res.vmonth3);
+        $('#' + res.catalog_year + '-april').attr('data-avalible', res.vmonth4);
+        $('#' + res.catalog_year + '-may').attr('data-avalible', res.vmonth5);
+        $('#' + res.catalog_year + '-june').attr('data-avalible', res.vmonth6);
+        $('#' + res.catalog_year + '-july').attr('data-avalible', res.vmonth7);
+        $('#' + res.catalog_year + '-august').attr('data-avalible', res.vmonth8);
+        $('#' + res.catalog_year + '-september').attr('data-avalible', res.vmonth9);
+        $('#' + res.catalog_year + '-october').attr('data-avalible', res.vmonth10);
+        $('#' + res.catalog_year + '-november').attr('data-avalible', res.vmonth11);
+        $('#' + res.catalog_year + '-december').attr('data-avalible', res.vmonth12);
+        $('#delivery-value-hidden').html(parseFloat(res.price).toFixed(2));
+        $('#tax').html(res.pdv_from_vartist);
+        $('#first-date').html(res.first_date);
+        $('#last-date').html(res.last_date);
+        $('#date-beg').html(res.date_beg);
+        $('#date-ending').html(res.date_ending);
+        $('#control').val(res.control);
+    }
+
+    $('.subs-period-radio').on('change', function(e) {
+        $('#subscribe :checkbox').prop('checked', false);
+        $('#button-cart').prop('disabled', true).removeClass('btn-warning').addClass('btn-secondary');
+        getResponse(e);
+    });
+    // *********************************************************************
+    // ******************** Алгоритм работы чекбоксов **********************
+    // *********************************************************************
+    // получаем мессив месяцов не выхода по vmonth === 1
+
+    function getMonthNotProduced() {
+        var msp = parseInt($("#subscription-term").html());
+        var arr = [];
+        $(":checkbox").each(function(i, e) {
+            if (+$(e).attr("data-avalible") === 0) {
+                if (msp === 1) {
+                    arr.push(+$(e).attr("data-month"));
+                }
+            }
+        });
+        return arr;
+    }
+    // закрываем чекбоксы по дате
+
+
+    function cleseCheckboxByDate() {
+        var date = new Date();
+        var currentYear = date.getFullYear();
+        var checkboxArr = $(":checkbox");
+        var catalogYear = +$("#catalog-year").val();
+        var subsRestriction = $("#subs-restriction").html(); // Может быть число либо запись формата "гггг-мм-дд" если указано "Обмеження передплати" для товара
+        var privCod = +$("#priv-cod").val();
+        var startingDossierDate = new Date($("#first-date").html()).getTime();
+        var endingDossierDate = new Date($("#last-date").html()).getTime();
+        var endSubscribeDate = new Date($('#date-ending').html()).getTime();
+        var subsRestrictionArr = [];
+        var prepaymentLimit = false;
+        if (subsRestriction.length > 2){
+            subsRestrictionArr = subsRestriction.split('-');
+            prepaymentLimit = true;
+        } else {
+            subsRestrictionArr[2] = subsRestriction;
+        }
+        if (date.getTime() > endSubscribeDate) {
+            return $(':checkbox').prop({
+                'checked': false,
+                'disabled': true
+            });
+        }
+        $(checkboxArr).each(function(i, e) {
+            var inputMonth = i + 1;
+            inputMonth = inputMonth.toString();
+            inputMonth = (inputMonth.length) <= 1 ? 0 + inputMonth : inputMonth;
+            // var inputDateNew = new Date(`${catalogYear}-${inputMonth}-01`).getTime(); es6 for refactor
+            var inputDate = new Date("".concat(catalogYear, "-").concat(inputMonth, "-01")).getTime();
+            // закрытие чекбоксов по данным досье
+            if ((inputDate < startingDossierDate || inputDate > endingDossierDate) && (date.getTime() > endingDossierDate || date.getTime() < startingDossierDate)) {
+                $(e).prop({
+                    disabled: true,
+                    checked: false
+                }).removeClass("active");
+            } else {
+                $(e).prop({
+                    disabled: false
+                }).addClass("active");
+            }
+
+            // закрытие чекбоксов по дате запрета для заруб. изданий
+            if (privCod === 8) {
+                var oneDay = 24 * 60 * 60 * 1000;
+                var diffDays = Math.round((inputDate - date) / oneDay);
+
+                if (diffDays < +subsRestrictionArr[2]) {
+                    $(e).prop({
+                        disabled: true,
+                        checked: false
+                    }).removeClass("active");
+                }
+            } else {
+                // закрытие чекбоксов по дате запрета для Укр. изданий
+                var inputMonthAttr = $(e).attr("data-month");
+                var inputDayRestriction = new Date(currentYear, inputMonthAttr, +subsRestrictionArr[2]);
+                var month = date.getMonth();
+
+                // Если месяц конкретного чекбокса уже прошёл или идёт
+                if (inputMonthAttr <= month && currentYear === catalogYear) {
+                    $(e).prop({
+                        disabled: true,
+                        checked: false
+                    }).removeClass("active").addClass("disabled");
+                }
+
+                // Если месяц подписки уже прошёл
+                if (date > inputDayRestriction && currentYear === catalogYear) {
+                    $(e).prop({
+                        disabled: true,
+                        checked: false
+                    }).removeClass("active").addClass("disabled");
+                }
+
+                // Если установлено "Обмеження передплати" и оно уже прошло, то скрываем все чекбоксы
+                if (prepaymentLimit && date > new Date(subsRestrictionArr[0], +subsRestrictionArr[1] - 1, +subsRestrictionArr[2] + 1)){
+                    $(e).prop({
+                        disabled: true,
+                        checked: false
+                    }).removeClass("active").addClass("disabled");
+                }
+
+            }
+        });
+    }
+
+    cleseCheckboxByDate();
+
+    // запрет на выбор чекбоксов
+    function checboxRestriction() {
+        var msp = parseInt($("#subscription-term").html());
+        var inputArr = $("#subscribe *[name *=vmonth]");
+        var inputClassName = "";
+        var arr = getMonthNotProduced();
+        var lastMonth = +$('#last-date').html().split('-')[1]; // месяц в дате окончания действия досье
+        var privCod = +$("#priv-cod").val(); // privCod == 0: украинские издания; privCod == 8: зарубежные издания
+        $.each(inputArr, function(index, element) {
+            var dataAvalible = $(this).attr("data-avalible");
+            var dataMonth = +$(this).attr('data-month');
+            // запрет на выбор по месяцам невыхода подписки
+            if (arr.indexOf(index) >= 0) {
+                $(element).removeClass("month active").prop({
+                    disabled: true,
+                    checked: false
+                }); // запрет на выбор если остаток от деления их индекса с МСП не равно 0
+            } else if (index % msp === 0) {
+                inputClassName = $(element).attr("id");
+                if ( lastMonth - 1 >= +$(this).attr('data-month') ){
+                    // если текущий чекбокс не позже даты окончания действия досье
+                    if (!$(element).hasClass("disabled")) {
+                        $(element).addClass("active");
+                    }
+                } else {
+                    $(this).attr("disabled", true);
+                }
+                // disabled месяца если 3, 6, 9, 12 месяц имеет data-avalible === 1
+            } else if ( dataAvalible == 1 && dataMonth > 0 && privCod == 0) {
+                if (!!inputClassName){
+                    var startCheckBox = $('#' + inputClassName);
+                    $(element).attr("disabled", "true").removeClass('active').addClass("for-".concat(inputClassName));
+                    if ( lastMonth - 1 >= +startCheckBox.attr('data-month') ){
+                        if (!startCheckBox.hasClass('disabled')){
+                            // Если в первом чекбоксе нет класса disabled
+                            startCheckBox.attr("disabled", false);
+                        }
+                    }
+                } else {
+                    $(this).attr("disabled", true);
+                }
+            } else {
+                if ( privCod == 0 ){
+                    if (!!inputClassName){
+                        $("#" + inputClassName).attr("disabled", "true");
+                    }
+                }
+                $(element).attr("disabled", "true").removeClass('active').addClass("for-".concat(inputClassName));
+            }
+        });
+    }
+
+    // устанавливаем активные чекбоксы если их класс $(".for-" + id) равен id выбранного чекбокса
+    function checkClick() {
+        $("#subscribe :checkbox").on("change", function() {
+            var id = $(this).attr("id");
+            var colsedCheckboxCalss = $(".for-" + id);
+
+            if ($(this).is(":checked")) {
+                $(colsedCheckboxCalss).prop("checked", true);
+                $(colsedCheckboxCalss).last().addClass("for-post").removeClass("active");
+                $(".month:disabled").removeClass("active");
+            } else {
+                $(colsedCheckboxCalss).prop("checked", false);
+                $(colsedCheckboxCalss).last().removeClass("for-post");
+                $(".month:disabled").removeClass("active");
+            }
+        });
+        // защита от клацанья в dev-tool сайта
+        $(":checkbox").each(function(i, e) {
+            var id = $(this).attr("id");
+            var colsedCheckboxCalss = $(".for-" + id);
+
+            if ($(e).hasClass("active")) {
+                if ($(e).is(":checked")) {
+                    $(colsedCheckboxCalss).prop("checked", true);
+                }
+            }
+        });
+    }
+
+    // устанавливаем неактивные чекбоксы по МСП, отслеживаем клик по чекбоксу и добавляем "чек" в последующие скрытые чекбоксы
+    function setMsp() {
+        if ($("#control").val() == 1) {
+            checboxRestriction();
+            checkClick();
+        } else {
+            $(".month").addClass("active");
+            $(".month").on("change", function() {
+                if ($(this).is(":checked")) {
+                    $(".month").not($(this)).prop({
+                        disabled: true,
+                        checked: false
+                    }).removeClass("active");
+                } else {
+                    $(".month:not(:checked)").prop("disabled", false).addClass("active");
+                    cleseCheckboxByDate();
+                }
+            });
+        }
+    }
+
+    setMsp();
+
+    // закрытие чекбоксов по ограничению для укр. изданй
+    function closeFirstActiveInput() {
+        var date = new Date();
+        var currentYear = date.getFullYear();
+        var currentMonth = date.getMonth();
+        var currentDay = date.getDate();
+        var catalogYear = +$("#catalog-year").val();
+        var subsRestriction = $("#subs-restriction").html();
+        var subsRestrictionArr = [];
+        if (subsRestriction.length > 2){
+            subsRestrictionArr = subsRestriction.split('-');
+        } else {
+            subsRestrictionArr[2] = subsRestriction;
+        }
+        var dateRestriction = new Date(currentYear, 11, +subsRestrictionArr[2]);
+
+
+        if (+$("#priv-cod").val() !== 8) {
+            // закрытие следующего месяца после прохождения даты запрета в этом году
+            if (currentYear === catalogYear && currentDay > +subsRestrictionArr[2]) {
+                var nextMonth = $("[data-month=" + (currentMonth + 1) + "]");
+                return $(nextMonth).prop("disabled", true).removeClass("active");
+            } // закрытие первого чекбокса дя следующего года
+
+            if (date > dateRestriction) {
+                return $(":checkbox.active").first().prop("disabled", true).removeClass("active");
+            }
+        }
+    }
+
+    closeFirstActiveInput();
+
+    // получаем все "чекнутые" чекбуксы для счет фактуры и записываем их input id=checked-fields
+    function getCheckedMonth() {
+        var arr = [];
+        $(":checkbox").each(function(i, e) {
+            if ($(e).is(":checked")) {
+                var dataMonth = +$(this).attr("data-month") + 1;
+                arr.push(dataMonth);
+            }
+        });
+        arr = arr.join(",");
+        return arr;
+    }
+
+    // отлавливаем клик по чекбоксу
+    $("#subscribe :checkbox").on("change", function() {
+        // if ($("#control").val() == 1) {
+        //     checboxRestriction();
+        //     checkClick();
+        // }
+        // cleseCheckboxByDate();
+        setMsp();
+        closeFirstActiveInput();
+        calculateTotal();
+    });
+
+
+    $(".month:enabled").on("change", function() {
+        var pricePerOne = +parseFloat($("#delivery-value-hidden").text());
+        var count = $(".month:enabled:checked").length;
+        var price = pricePerOne * count;
+        var prodIdx = $("#publication-index").text();
+        localStorage.setItem(prodIdx, price);
+    });
+
+    // *********************************************************************
+    // ********************* Калькулятор карты товара **********************
+    // *********************************************************************
+
+    var quantity = $("#input-quantity");
+
+    // максимальное/минимальное значение счетчика
+    function quantityMaxMinValue() {
+        var value = $(quantity).val();
+
+        if (value !== '' && value.indexOf('.') === -1 || value === '') {
+            $(quantity).val(Math.max(Math.min(value, 3000), 1));
+        }
+    }
+
+    // калькуляция по изменению счетчика
+    quantity.on("change", function() {
+        quantityMaxMinValue();
+        calculateTotal();
+    });
+    quantity.on('keydown', function(e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            quantity.change().blur();
+        }
+    });
+
+    // инкремент/декремент счетчика
+    $('#counter .btn').on('click', function() {
+        if ($(this).attr('id') === 'minus') {
+            quantity.val(+quantity.val() - 1);
+        }
+
+        if ($(this).attr('id') === 'plus') {
+            quantity.val(+quantity.val() + 1);
+        }
+
+        quantityMaxMinValue();
+        calculateTotal();
+    }); // получаем тариф в зависимости от кл-ва выбранных месяцов
+
+    var one = $("#one").html() + " грн";
+    var twoThree = $("#two-three").html() + " грн";
+    var fourSix = $("#four-six").html() + " грн";
+    var sevenTwelve = $("#seven-twelve").html() + " грн";
+
+    function getSubscibePrice() {
+        var checkedInputs = +$("#subscribe :checkbox:checked").length;
+
+        if (checkedInputs <= 1) {
+            $(".adding-value").html(one);
+        } else if (checkedInputs >= 2 && checkedInputs <= 3) {
+            $(".adding-value").html(twoThree);
+        } else if (checkedInputs >= 4 && checkedInputs <= 6) {
+            $(".adding-value").html(fourSix);
+        } else {
+            $(".adding-value").html(sevenTwelve);
+        }
+    }
+
+    getSubscibePrice(); // калькуляция всей стоимости
+
+    var tax = $("#tax").html();
+
+    function calculateTotal() {
+        getSubscibePrice();
+        let deliveryValue = parseFloat($("#delivery-value-hidden").text());
+        var activeInputs = $('input.active:checked').length === 0 ? 1 : $('input.active:checked').length;
+        var calculateTax = tax * quantity.val() * activeInputs;
+        var addingValue = parseFloat($(".adding-value").text());
+        var totaldeliveryValue = deliveryValue * activeInputs * quantity.val();
+        var total = totaldeliveryValue + addingValue;
+        $("#input_tax").val(calculateTax.toFixed(2));
+        $("#delivery-value").html(totaldeliveryValue.toFixed(2) + " грн");
+        $("#total-value").html(total.toFixed(2) + " грн");
+    }
+
+    calculateTotal();
+    // *********************************************************************
+    // ********************** Сбор и отправка данных ***********************
+    // *********************************************************************
+
+    // ********** получаем МП **********
+
+
+    // МП для Укр. изданий
+    function setUkrMp() {
+        var typeOfSubscribe = $('.subs-period-radio:checked').val();
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var $dateRestriction = $('#subs-restriction').html();
+        var catalogYear = +getProductCardInfo().catalogYear;
+        var currentYear = new Date().getFullYear();
+
+        // Возвращаем единицу для каталога на следующий год
+        if (currentYear !== catalogYear) return 1;
+
+        // МП для подписки с типом = 1
+        if (typeOfSubscribe == 1) {
+            if (day <= $dateRestriction) {
+                return month + 1;
+            } else {
+                return month + 2;
+            }
+        }
+        // МП для подписки с типом = 2
+        if (typeOfSubscribe == 2) {
+            return +$(":checkbox.active").not(':disabled').first().attr("data-month") + 1;
+        }
+        if (typeOfSubscribe === undefined) {
+            return +$(":checkbox.active").not(':disabled').first().attr("data-month") + 1;
+        }
+    };
+
+    // МП для заруб. изданий
+    var $setForeignMp = +$(":checkbox.active").not(':disabled').first().attr("data-month") + 1;
+
+    // Собираем в переменные все данные при первой загрузке, для избежания вмешательст в DOM
+
+    function getProductCardInfo() {
+        return {
+            privCode: $("#priv-cod").val(),
+            prodId: $("#product-id").val(),
+            deliveryValueHidden: $("#delivery-value-hidden").html(),
+            control: $("#control").val(),
+            method: $("#method").val(),
+            catalogYear: $("#catalog-year").val(),
+            productId: $("#product-id").val()
+        };
+    }
+
+    getProductCardInfo();
+
+    function resetReuest() {
+        var productInfo = getProductCardInfo();
+        $("#MP").val(productInfo.privCode == 8 ? $setForeignMp : setUkrMp());
+        $("#priv-cod").val(productInfo.privCode);
+        $("#product-id").val(productInfo.prodId);
+        $("#delivery-value-hidden").html(productInfo.deliveryValueHidden);
+        $("#control").val(productInfo.control);
+        $("#method").val(productInfo.method);
+        $("#catalog-year").val(productInfo.catalogYear);
+        $("#product-id").val(productInfo.productId);
+    }
+
+    // Функционал для каталогов разного года
+    $(".btn-year-group").on("click", function (e) {
+        e.preventDefault();
+        if ($(e.target).hasClass("btn-year")) {
+            $("#catalog-year").val($(e.target).attr("id"));
+            $("#product-data").submit();
+        }
+    });
+    // ********** Отправка данных **********
+    // поверка кнопки
+
+    $("#subscribe :checkbox").change(function() {
+        if ($(".active:checked").length > 0) {
+            $("#button-cart").attr("disabled", false).removeClass("btn-secondary").addClass("btn-warning");
+        } else {
+            $("#button-cart").attr("disabled", true).removeClass("btn-warning").addClass("btn-secondary");
+        }
+    });
+
+    // отправка данных
+    $(function() {
+        $("#button-cart").on("click", function() {
+            //gtm start
+            let nameadd = $("#name-vid").text();//name
+            let indexadd = $("#publication-index").text();//id
+            let pricefull = $("#total-value").text();
+            let pricenums = pricefull.split(" ");
+            let priceadd = pricenums[0];//full coast
+            let categoryadd = $("#product-category").text();//categoty
+            let qtyadd = $("#input-quantity").val();//qty
+
+            //push
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+            'event': 'add_to_cart',
+            'ecommerce': {
+            'items': [{
+                'item_name': `${nameadd}`,
+                'item_id': `${indexadd}`,
+                'price': `${priceadd}`,
+                'currency': 'UAH',
+                'item_category': `${categoryadd}`,
+                'quantity': `${qtyadd}`,
+            }]
+            }
+            });
+
+
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+            'ecommerce': {
+            'currencyCode': 'UAH',
+            'add': {
+                'products': [{
+                'name': `${nameadd}`,
+                'id': `${indexadd}`,
+                'price': `${priceadd}`,
+                'category': `${categoryadd}`,
+                'quantity': `${qtyadd}`,
+                }]
+            }
+            },
+            'event': 'gtm-ee-event',
+            'gtm-ee-event-category': 'Enhanced Ecommerce',
+            'gtm-ee-event-action': 'Adding a Product to a Shopping Cart',
+            'gtm-ee-event-non-interaction': 'False',
+            });
+            //gtm end 
+            resetReuest();
+            calculateTotal();
+            var getTotal = parseFloat($(".total-value").text());
+            var deliveryValue = parseFloat($(".delivery-value").text());
+            var subsVal = parseFloat($(".adding-value").text());
+            $("#checked-fields").removeAttr("val").val(getCheckedMonth());
+            $("#product-price").val(deliveryValue.toFixed(2));
+            $("#subs-price").val(subsVal.toFixed(2));
+            $("#custom-total").val(getTotal.toFixed(2));
+            $.ajax({
+                url: "index.php?route=checkout/cart/add",
+                type: "post",
+                data: $("#product input[type='number'], #product input[type='hidden'], #product input[type='radio']:checked, #product .for-post[type='checkbox']:checked, #product select, #product textarea"),
+                dataType: "json",
+                beforeSend: function beforeSend() {
+                    $("#button-cart").button("loading");
+                },
+                complete: function complete() {
+                    $("#button-cart").button("reset");
+                },
+                success: function success(json) {
+                    $(".form-group").removeClass("has-error");
+                    var jsonResponse = json;
+                    var statusCode = jsonResponse.status_code;
+                    var errorText = {
+                        'fail': 'Для оформлення передплати для Донецької та Луганської областей необхідно створити нове замовлення та здійснити його оформлення за «Каталогом видань України «Преса поштою» для Донецької та Луганської областей»',
+                        'no_data': 'Помилка виникла під час додавання видання до кошику. Необхідно повторити Ваш вибір!',
+                        'wrong_data': 'Помилка виникла в коректності даних. Необхідно повторити Ваш вибір!',
+                        'other_type_catalog': 'Не можна додавати в один кошик видання з різних каталогів – Каталогу видань України та Каталогів місцевих видань. Необхідно створити окремі замовлення!',
+                        'other_region': 'Не можна додавати в один кошик видання з Каталогів місцевих видань різних областей. Необхідно створити окремі замовлення!',
+                        'other_district': 'Не можна додавати в один кошик видання, які розповсюджуються в межах різних районів. Необхідно створити окремі замовлення!'
+                    };
+
+                    if (json["success"]) {
+                        // Need to set timeout otherwise it wont update the total
+                        setTimeout(function() {
+                            $("#cart span.cart__counter").html(json["total"]);
+                        }, 100);
+
+                        if (statusCode === 400) {
+                            var errorType = jsonResponse.result_type;
+                            $("#modalWindow .modal-body").load("index.php?route=common/cart/info .modal-body", function() {
+                                $("#modal-error-message").css("display", "block");
+                                $("#modal-error-message .error-message").text(errorText[errorType]);
+                                $("#modal-table").css("display", "none");
+                            });
+                            $("#btn-cart").on("click", function() {
+                                $("#modalWindow .modal-body").load("index.php?route=common/cart/info .modal-body", function() {
+                                    $("#modal-error").css("display", "none");
+                                    $("#modal-table").css("display", "block");
+                                });
+                            });
+                        }
+
+                        if (statusCode === 200) {
+                            $("#modalWindow .modal-body").load("index.php?route=common/cart/info .modal-body", function() {
+                                $("#modal-error").css("display", "none");
+                                $("#modal-table").css("display", "block");
+                            });
+                        }
+
+                        $("#modalWindow").modal();
+                    }
+                },
+                error: function error(xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        });
+    }); // окончание файла скрипта
+});
