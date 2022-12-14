@@ -1,10 +1,12 @@
 package com.epam.dao.impl.mysql;
 
 import com.epam.dao.DBManager;
+import com.epam.dao.DaoFactory;
 import com.epam.dao.UserDAO;
 import com.epam.entity.Role;
 import com.epam.entity.Status;
 import com.epam.entity.User;
+import com.epam.entity.UserDetails;
 import com.epam.exceptions.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,6 +50,8 @@ public class MySqlUserDAO implements UserDAO {
         } finally {
             DBManager.getInstance().close(con);
         }
+        UserDetails ud = DaoFactory.createUserDetailsDao().findUserDetailsByEmail(email);
+        user.setUserDetails(ud);
         return user;
     }
     @Override

@@ -5,6 +5,9 @@ import java.util.Objects;
 
 public class Subscription extends Entity {
 
+   private String login;
+   private String index;
+   private Integer paymentId;
    private SubscriptionStatus status;
    private Timestamp startDate;
    private Timestamp endDate;
@@ -35,6 +38,13 @@ public class Subscription extends Entity {
    public void setEndDate(Timestamp endDate) {
       this.endDate = endDate;
    }
+   public String getLogin() {
+      return login;
+   }
+
+   public void setLogin(String login) {
+      this.login = login;
+   }
 
    @Override
    public String toString() {
@@ -56,5 +66,21 @@ public class Subscription extends Entity {
    @Override
    public int hashCode() {
       return Objects.hash(status, startDate, endDate);
+   }
+
+   public String getIndex() {
+      return index;
+   }
+
+   public void setIndex(String index) {
+      this.index = index;
+   }
+
+   public Integer getPaymentId() {
+      return paymentId;
+   }
+
+   public void setPaymentId(Integer paymentId) {
+      this.paymentId = paymentId;
    }
 }

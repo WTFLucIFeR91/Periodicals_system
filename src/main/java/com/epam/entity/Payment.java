@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class Payment extends Entity{
 
+    private String login;
     private Integer id;
     private Timestamp date;
     private BigDecimal totalPrice;
@@ -58,5 +59,13 @@ public class Payment extends Entity{
     @Override
     public int hashCode() {
         return Objects.hash(id, date, totalPrice);
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Publication extends Entity {
 
-    private BigInteger index;
+    private String index;
     private String name;
     private String description;
     private String language;
@@ -17,11 +17,11 @@ public class Publication extends Entity {
     public Publication() {
     }
 
-    public BigInteger getIndex() {
+    public String getIndex() {
         return index;
     }
 
-    public void setIndex(BigInteger index) {
+    public void setIndex(String index) {
         this.index = index;
     }
 

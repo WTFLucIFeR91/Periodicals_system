@@ -7,6 +7,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema Periodicals_system
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `Periodicals_system` ;
 
 -- -----------------------------------------------------
 -- Schema Periodicals_system
@@ -17,6 +18,8 @@ USE `Periodicals_system` ;
 -- -----------------------------------------------------
 -- Table `Periodicals_system`.`user_authorization`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Periodicals_system`.`user_authorization` ;
+
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`user_authorization` (
   `email` VARCHAR(90) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
@@ -32,6 +35,8 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `Periodicals_system`.`user_details`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Periodicals_system`.`user_details` ;
+
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`user_details` (
   `user_authorization_email` VARCHAR(90) NOT NULL,
   `first_name` VARCHAR(45) NULL,
@@ -51,6 +56,8 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `Periodicals_system`.`topic`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Periodicals_system`.`topic` ;
+
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`topic` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(150) NOT NULL,
@@ -62,12 +69,14 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `Periodicals_system`.`publication`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Periodicals_system`.`publication` ;
+
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`publication` (
-  `index` BIGINT NOT NULL,
+  `index` VARCHAR(10) NOT NULL,
   `name` VARCHAR(150) NOT NULL,
   `description` VARCHAR(400) NOT NULL,
   `language` VARCHAR(45) NOT NULL,
-  `price` DECIMAL(3) NOT NULL,
+  `price` DECIMAL(12,2) NOT NULL,
   `img` VARCHAR(100) NULL,
   `topic_id` INT NOT NULL,
   PRIMARY KEY (`index`, `topic_id`),
@@ -85,10 +94,12 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `Periodicals_system`.`payment`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Periodicals_system`.`payment` ;
+
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`payment` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `user_authorization_email` VARCHAR(90) NOT NULL,
-  `date` TIMESTAMP NOT NULL,
+  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `total_price` DECIMAL(9,2) NOT NULL,
   PRIMARY KEY (`id`, `user_authorization_email`),
   INDEX `fk_payment_user_authorization1_idx` (`user_authorization_email` ASC) VISIBLE,
@@ -104,13 +115,15 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `Periodicals_system`.`subscription`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Periodicals_system`.`subscription` ;
+
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`subscription` (
   `user_authorization_email` VARCHAR(90) NOT NULL,
-  `publication_index` BIGINT NOT NULL,
-  `status` ENUM('active', 'stopped') NOT NULL DEFAULT 'stopped',
-  `created_at` TIMESTAMP NOT NULL,
-  `expired_at` TIMESTAMP NOT NULL,
+  `publication_index` VARCHAR(10) NOT NULL,
   `payment_id` BIGINT NOT NULL,
+  `status` ENUM('active', 'stopped') NOT NULL DEFAULT 'stopped',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expired_at` TIMESTAMP NULL,
   PRIMARY KEY (`user_authorization_email`, `publication_index`, `payment_id`),
   INDEX `fk_user_authorization_has_publication_publication1_idx` (`publication_index` ASC) VISIBLE,
   INDEX `fk_user_authorization_has_publication_user_authorization1_idx` (`user_authorization_email` ASC) VISIBLE,
