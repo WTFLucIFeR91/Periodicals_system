@@ -6,8 +6,8 @@ import com.epam.entity.Status;
 import com.epam.entity.User;
 import com.epam.exceptions.DBException;
 import com.epam.web.Path;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

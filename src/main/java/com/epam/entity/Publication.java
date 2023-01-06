@@ -5,9 +5,8 @@ import java.math.BigInteger;
 import java.util.Objects;
 
 public class Publication extends Entity {
-
-    private String index;
     private String name;
+    private String index;
     private String description;
     private String language;
     private BigDecimal price;

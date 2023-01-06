@@ -17,6 +17,14 @@
   </context-param>
 
   <context-param>
+    <description>Location to store uploaded file</description>
+    <param-name>file-upload</param-name>
+    <param-value>
+      C:\Users\Игорь Ворона\Desktop\Schedule(module 2-3)\FinalTask\Periodicals_system\Periodicals_system\src\main\webapp\resources\images
+    </param-value>
+  </context-param>
+
+  <context-param>
     <param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
     <param-value>uk</param-value>
   </context-param>
@@ -36,7 +44,7 @@
   </init-param>
   <init-param>
     <param-name>user</param-name>
-    <param-value>clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance</param-value>
+    <param-value>clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance addPeriodicalToBasket showBasket </param-value>
   </init-param>
   <init-param>
     <param-name>out-of-control</param-name>

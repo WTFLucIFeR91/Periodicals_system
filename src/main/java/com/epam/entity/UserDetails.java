@@ -5,7 +5,8 @@ import java.util.Objects;
 public class UserDetails extends Entity{
     private String firstName;
     private String lastName;
-    private String DeliveryAddress;
+    private String deliveryAddress;
+
     private String telephone;
 
     public UserDetails() {
@@ -28,14 +29,6 @@ public class UserDetails extends Entity{
         this.lastName = lastName;
     }
 
-    public String getDeliveryAddress() {
-        return DeliveryAddress;
-    }
-
-    public void setDeliveryAddress(String deliveryAddress) {
-        DeliveryAddress = deliveryAddress;
-    }
-
     public String getTelephone() {
         return telephone;
     }
@@ -49,7 +42,7 @@ public class UserDetails extends Entity{
         return "UserDetails{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", DeliveryAddress='" + DeliveryAddress + '\'' +
+                ", DeliveryAddress='" + deliveryAddress + '\'' +
                 ", telephone='" + telephone + '\'' +
                 '}';
     }
@@ -59,11 +52,19 @@ public class UserDetails extends Entity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDetails that = (UserDetails) o;
-        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(DeliveryAddress, that.DeliveryAddress) && Objects.equals(telephone, that.telephone);
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(deliveryAddress, that.deliveryAddress) && Objects.equals(telephone, that.telephone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, DeliveryAddress, telephone);
+        return Objects.hash(firstName, lastName, deliveryAddress, telephone);
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 }

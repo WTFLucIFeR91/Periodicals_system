@@ -8,6 +8,7 @@ public class Subscription extends Entity {
    private String login;
    private String index;
    private Integer paymentId;
+   private Publication publication;
    private SubscriptionStatus status;
    private Timestamp startDate;
    private Timestamp endDate;
@@ -82,5 +83,13 @@ public class Subscription extends Entity {
 
    public void setPaymentId(Integer paymentId) {
       this.paymentId = paymentId;
+   }
+
+   public Publication getPublication() {
+      return publication;
+   }
+
+   public void setPublication(Publication publication) {
+      this.publication = publication;
    }
 }

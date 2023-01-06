@@ -1,6 +1,7 @@
 package com.epam.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 public class User extends Entity {
@@ -10,8 +11,17 @@ public class User extends Entity {
     private Status status;
     private BigDecimal balance;
     private UserDetails userDetails;
+    private List<Subscription> subscriptions;
 
     public User() {
+    }
+
+    public List<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     public String getEmail() {

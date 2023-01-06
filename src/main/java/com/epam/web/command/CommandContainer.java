@@ -2,8 +2,8 @@ package com.epam.web.command;
 
 import com.epam.web.command.admin.*;
 import com.epam.web.command.user.*;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.util.HashMap;
@@ -28,22 +28,24 @@ public class CommandContainer {
         commands.put("paymentForm", new PaymentFormCommand());
         commands.put("subscribe", new SubscribeCommand());
 
+        commands.put("deletePeriodical", new DeletePeriodical());
+        commands.put("editPeriodical", new EditPeriodical());
+        commands.put("addPeriodical", new AddPeriodicalCommand());
+
+        commands.put("addPeriodicalToBasket", new AddPeriodicalToBasketCommand());
+        commands.put("showBasket", new ShowBasketCommand());
 
 
-
-
-
-
+        commands.put("pagination", new Pagination());
 
         commands.put("adminPage" , new AdminPageCommand());
         commands.put("adminProfile", new AdminProfileCommand());
         commands.put("showUsers", new ShowUsersCommand());
 
-        commands.put("addPeriodical", new AddPeriodicalCommand());
+
         commands.put("block", new BlockUserCommand());
         commands.put("unblock", new UnblockUserCommand());
-        commands.put("deletePeriodical", new DeletePeriodical());
-        commands.put("editPeriodical", new EditPeriodical());
+
 
 
 

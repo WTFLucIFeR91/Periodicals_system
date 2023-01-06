@@ -10,16 +10,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+;
 
 @WebListener
 public class ContextListener implements ServletContextListener {
+
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("ContextListener starts...");
 
         ServletContext context = sce.getServletContext();
-
         initLogger(context);
         DBManager.getInstance();
         initCommandContainer();
@@ -30,6 +31,7 @@ public class ContextListener implements ServletContextListener {
 
     private void initLogger (ServletContext ctx){
         System.out.println("init logger");
+
 
         String path = ctx.getRealPath("WEB-INF/periodicals.log");
         System.out.println("path => "+ path);

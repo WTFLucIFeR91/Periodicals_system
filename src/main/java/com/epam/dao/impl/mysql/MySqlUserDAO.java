@@ -11,6 +11,7 @@ import com.epam.exceptions.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import java.sql.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,6 +24,7 @@ public class MySqlUserDAO implements UserDAO {
     private static final String INSERT_USER = "INSERT INTO `periodicals_system`.`user_authorization` " +
             "(`email`,`password`,`role`,`status`,`balance`) VALUES(?,?,?,?,?);";
     private static final String UPDATE_USER = "UPDATE user_authorization SET password=?, role=?, status=?, balance=? WHERE email=?;";
+
     private static final String UPDATE_USER_WITHOUT_BALANCE = "UPDATE user_authorization SET password=?, role=?, status=? WHERE email=?;";
 
     @Override
@@ -68,9 +70,11 @@ public class MySqlUserDAO implements UserDAO {
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 users.add(extractUser(rs));
+
             }
             rs.close();
             pstmt.close();
+
         } catch (SQLException ex) {
             DBManager.getInstance().rollback(con);
             String message = "Can`t find all users";
@@ -91,7 +95,7 @@ public class MySqlUserDAO implements UserDAO {
         try {
             con = getConnection();
             con.setAutoCommit(false);
-            pstmt = con.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
+            pstmt = con.prepareStatement(INSERT_USER);
 
             int k = 0;
             pstmt.setString(++k, user.getEmail());
@@ -142,6 +146,40 @@ public class MySqlUserDAO implements UserDAO {
         }
         return true;
     }
+    private static final String UPDATE_USER_BY_EMAIL = "UPDATE user_authorization,user_details " +
+            "SET email=?, password=?, first_name=?, last_name=?, delivery_address=?,telephone=? " +
+            "WHERE email=?;";
+    @Override
+    public boolean updateUserByEmail(String email, User user) throws DBException {
+        PreparedStatement pstmt = null;
+        Connection con = null;
+        try {
+            con = getConnection();
+            con.setAutoCommit(false);
+            pstmt = con.prepareStatement(UPDATE_USER_BY_EMAIL);
+
+            int k = 0;
+            pstmt.setString(++k, user.getEmail());
+            pstmt.setString(++k, user.getPassword());
+            pstmt.setString(++k,user.getUserDetails().getFirstName());
+            pstmt.setString(++k,user.getUserDetails().getLastName());
+            pstmt.setString(++k,user.getUserDetails().getDeliveryAddress());
+            pstmt.setString(++k,user.getUserDetails().getTelephone());
+            pstmt.setString(++k,email);
+
+            pstmt.executeUpdate();
+            con.commit();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollback(con);
+            String message = "Can`t update user";
+            log.error(message, ex);
+            throw new DBException(message, ex);
+        } finally {
+            DBManager.getInstance().close(con);
+        }
+        return true;
+    }
 
     @Override
     public boolean updateUserWithoutBalance(User user) throws DBException {
@@ -175,13 +213,15 @@ public class MySqlUserDAO implements UserDAO {
         return DBManager.getInstance().getConnection();
     }
 
-    private User extractUser(ResultSet rs) throws SQLException {
+    private User extractUser(ResultSet rs) throws SQLException, DBException {
         User user = new User();
         user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("password"));
         user.setRole(Role.valueOf((rs.getString("role")).toUpperCase()));
         user.setStatus(Status.valueOf((rs.getString("status")).toUpperCase()));
         user.setBalance(rs.getBigDecimal("balance"));
+        UserDetails ud = DaoFactory.createUserDetailsDao().findUserDetailsByEmail(user.getEmail());
+        user.setUserDetails(ud);
         return user;
     }
 }

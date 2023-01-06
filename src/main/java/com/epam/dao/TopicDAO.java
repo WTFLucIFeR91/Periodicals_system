@@ -12,8 +12,9 @@ public interface TopicDAO {
 
     List<Topic> findAllTopics() throws DBException;
 
-    boolean addTopic(Topic topic) throws DBException;
+    Topic addTopic(Topic topic) throws DBException;
 
     boolean updateTopic(Topic topic) throws DBException;
+
 
 }

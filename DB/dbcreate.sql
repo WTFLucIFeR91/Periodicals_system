@@ -61,7 +61,8 @@ DROP TABLE IF EXISTS `Periodicals_system`.`topic` ;
 CREATE TABLE IF NOT EXISTS `Periodicals_system`.`topic` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(150) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

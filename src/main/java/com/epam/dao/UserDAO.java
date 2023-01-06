@@ -14,6 +14,7 @@ public interface UserDAO {
     boolean addUser(User user) throws DBException;
 
     boolean updateUser(User user) throws DBException;
+    boolean updateUserByEmail(String email,User user) throws DBException;
 
     boolean updateUserWithoutBalance(User user) throws DBException;
 

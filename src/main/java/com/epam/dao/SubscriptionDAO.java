@@ -13,7 +13,11 @@ public interface SubscriptionDAO {
 
     boolean addSubscription(User user, Publication publication, Payment payment) throws DBException;
 
-    List<Subscription> findSubscriptionsByUserEmail(String email) throws DBException;
+    boolean addSubscription(Subscription subscription, int id) throws DBException;
+
+    List<Subscription> findSubscriptionsByUserEmail(String email, int start, int end) throws DBException;
 
     boolean isSubscribed(String email, String  index) throws DBException;
+
+    int count(String email);
 }

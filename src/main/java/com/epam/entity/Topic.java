@@ -38,7 +38,7 @@ public class Topic extends Entity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Topic topic = (Topic) o;
-        return Objects.equals(id, topic.id) && Objects.equals(name, topic.name);
+        return Objects.equals(name, topic.name);
     }
 
     @Override

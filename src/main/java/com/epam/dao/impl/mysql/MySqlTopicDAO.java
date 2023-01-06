@@ -10,6 +10,7 @@ import com.epam.exceptions.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import java.sql.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -85,7 +86,7 @@ public class MySqlTopicDAO implements TopicDAO {
     }
 
     @Override
-    public boolean addTopic(Topic topic) throws DBException {
+    public Topic addTopic(Topic topic) throws DBException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Connection con = null;
@@ -111,7 +112,7 @@ public class MySqlTopicDAO implements TopicDAO {
         } finally {
             DBManager.getInstance().close(con);
         }
-        return true;
+        return topic;
     }
 
     @Override
@@ -140,6 +141,8 @@ public class MySqlTopicDAO implements TopicDAO {
         }
         return true;
     }
+
+
 
     private Connection getConnection() {
         return DBManager.getInstance().getConnection();

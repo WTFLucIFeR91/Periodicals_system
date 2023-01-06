@@ -58,6 +58,7 @@ public class MySqlPaymentDAO implements PaymentDAO {
 
         try {
             con = getConnection();
+            con.setAutoCommit(false);
             pstmt = con.prepareStatement(INSERT_PAYMENT, Statement.RETURN_GENERATED_KEYS);
             int k = 0;
             pstmt.setString(++k, payment.getLogin());

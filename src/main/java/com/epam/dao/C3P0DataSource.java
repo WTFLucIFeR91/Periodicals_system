@@ -11,8 +11,8 @@ public class C3P0DataSource {
         comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/periodicals_system?characterEncoding=utf8");
         comboPooledDataSource.setUser("root");
         comboPooledDataSource.setPassword("root");
-        comboPooledDataSource.setMinPoolSize(3);
-        comboPooledDataSource.setAcquireIncrement(3);
+        comboPooledDataSource.setMinPoolSize(5);
+        comboPooledDataSource.setAcquireIncrement(5);
         comboPooledDataSource.setMaxPoolSize(30);
     }
     public static Connection getConnection () throws SQLException {
