@@ -32,8 +32,7 @@ public class CommandContainer {
         commands.put("editPeriodical", new EditPeriodical());
         commands.put("addPeriodical", new AddPeriodicalCommand());
 
-        commands.put("addPeriodicalToBasket", new AddPeriodicalToBasketCommand());
-        commands.put("showBasket", new ShowBasketCommand());
+
 
 
         commands.put("pagination", new Pagination());

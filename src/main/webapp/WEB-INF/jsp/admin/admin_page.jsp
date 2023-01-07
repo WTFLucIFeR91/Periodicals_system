@@ -11,8 +11,8 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <jsp:include page="/WEB-INF/jsp/fragment/headerWelcomePage.jsp"/>
-    <jsp:include page="/WEB-INF/jsp/fragment/welcomePageContent.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/fragment/headerForAdmin.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/fragment/publicationsContentForAdmin.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/footer.jsp"/>
     <script src="js/bootstrap.bundle.min.js"></script>
 </body>
