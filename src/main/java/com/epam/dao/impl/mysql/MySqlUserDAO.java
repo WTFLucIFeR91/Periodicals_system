@@ -208,6 +208,65 @@ public class MySqlUserDAO implements UserDAO {
         }
         return true;
     }
+    private static final String FIND_COUNT_FOR_USERS ="SELECT COUNT(*) FROM user_authorization;";
+    @Override
+    public int countUsers() {
+        int count = 0;
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(FIND_COUNT_FOR_USERS);
+            if (rs.next()) {
+                count = rs.getInt("COUNT(*)");
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollback(con);
+            String message = "Can`t find users...";
+            log.error(message, ex);
+
+        } finally {
+            DBManager.getInstance().close(con);
+        }
+        return count;
+    }
+    private static final String FIND_ALL_USERS_FOR_PAGINATE = "SELECT * FROM periodicals_system.user_authorization LIMIT ?,?;";
+    @Override
+    public List<User> findAllUsersForPaginate(int start, int end) {
+        List<User> users = new CopyOnWriteArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(FIND_ALL_USERS_FOR_PAGINATE);
+            pstmt.setInt(1,start);
+            pstmt.setInt(2,end);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(extractUser(rs));
+
+            }
+            rs.close();
+            pstmt.close();
+
+        } catch (SQLException | DBException ex) {
+            DBManager.getInstance().rollback(con);
+            String message = "Can`t find all users";
+            log.error(message, ex);
+        } finally {
+            DBManager.getInstance().close(con);
+        }
+        return users;
+
+    }
 
     private Connection getConnection() {
         return DBManager.getInstance().getConnection();

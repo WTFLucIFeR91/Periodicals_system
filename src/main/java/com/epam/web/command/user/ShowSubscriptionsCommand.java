@@ -27,9 +27,6 @@ public class ShowSubscriptionsCommand implements Command {
         User user = (User) session.getAttribute("user");
         log.trace("user => " + user);
 
-
-
-
         int page = 1;
         int recordsPerPage =6;
         int noOfRecords = DaoFactory.createSubscriptionDAO().count(user.getEmail());

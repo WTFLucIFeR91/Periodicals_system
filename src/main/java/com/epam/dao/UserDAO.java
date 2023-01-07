@@ -18,4 +18,7 @@ public interface UserDAO {
 
     boolean updateUserWithoutBalance(User user) throws DBException;
 
+    int countUsers();
+
+    List<User> findAllUsersForPaginate(int start, int end);
 }
