@@ -5,6 +5,7 @@ import com.epam.dao.UserDAO;
 import com.epam.entity.Role;
 import com.epam.entity.User;
 import com.epam.exceptions.DBException;
+import com.epam.exceptions.IncorrectPasswordException;
 import com.epam.web.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,8 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static com.epam.util.PasswordHashUtil.verify;
 
 public class LoginCommand implements Command{
 
@@ -40,7 +43,14 @@ public class LoginCommand implements Command{
         User user = userDAO.findUserByEmail(email);
         log.trace("user => "+ user);
 
-        if (user == null || !password.equals(user.getPassword())){
+        boolean ver = false;
+        try {
+            ver = verify(user.getPassword(),password);
+        } catch (IncorrectPasswordException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (user == null || !ver){
             log.warn("user is missing or wrong password");
             return Path.PAGE_LOGIN;
         }

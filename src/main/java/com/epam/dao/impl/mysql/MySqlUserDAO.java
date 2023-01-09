@@ -16,6 +16,8 @@ import java.sql.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.epam.util.PasswordHashUtil.encode;
+
 public class MySqlUserDAO implements UserDAO {
 
     private static final Logger log = LogManager.getLogger(MySqlUserDAO.class);
@@ -96,10 +98,11 @@ public class MySqlUserDAO implements UserDAO {
             con = getConnection();
             con.setAutoCommit(false);
             pstmt = con.prepareStatement(INSERT_USER);
-
+            String password = user.getPassword();
+            password=encode(password);
             int k = 0;
             pstmt.setString(++k, user.getEmail());
-            pstmt.setString(++k, user.getPassword());
+            pstmt.setString(++k, password);
             pstmt.setString(++k, user.getRole().toString());
             pstmt.setString(++k, user.getStatus().toString());
             pstmt.setBigDecimal(++k, user.getBalance());
