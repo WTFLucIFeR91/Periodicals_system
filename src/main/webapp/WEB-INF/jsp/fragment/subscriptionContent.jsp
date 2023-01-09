@@ -9,7 +9,7 @@
          <div class="col">
              <div class="card shadow-sm">
                 <li class="image-additional d-flex justify-content-center" data-thumb="<? $link_admin_img; ?>">
-                   <img class="thumbnail" src="resources/images/${periodical.titleImgLink}" title="${periodical.titleImgLink}" alt="${num.titleImgLink}">
+                   <img class="thumbnail" src="resources/images/${periodical.titleImgLink}" title="${periodical.titleImgLink}" width="175" height="230" alt="${num.titleImgLink}">
                 </li>
          </div>
          <div class="card-body justify-content-center">

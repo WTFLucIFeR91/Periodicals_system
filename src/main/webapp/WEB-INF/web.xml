@@ -40,11 +40,11 @@
   <filter-class>com.epam.web.filter.AccessFilter</filter-class>
   <init-param>
     <param-name>admin</param-name>
-    <param-value>adminPage adminProfile addPeriodical showUsers block unblock addPeriodical editPeriodical deletePeriodical</param-value>
+    <param-value>adminPage adminProfile addPeriodical showUsers block unblock addPeriodical editPeriodical deletePeriodical uploadFile</param-value>
   </init-param>
   <init-param>
     <param-name>user</param-name>
-    <param-value>clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance addPeriodicalToBasket showBasket </param-value>
+    <param-value>clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance</param-value>
   </init-param>
   <init-param>
     <param-name>out-of-control</param-name>

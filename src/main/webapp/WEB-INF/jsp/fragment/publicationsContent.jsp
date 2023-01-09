@@ -10,7 +10,7 @@
                       <div class="col-md-6 col-lg-6 col-xl-2">
                         <div class="d-flex flex-column" style="height: 100%">
                           <div class="d-flex justify-content-center">
-                            <img class="" src="resources/images/${pub.titleImgLink}" alt="${pub.name}">
+                            <img class="" src="resources/images/${pub.titleImgLink}" width="175" height="230" alt="${pub.name}">
                             </div>
                             <h6><fmt:message key='Name'/> : ${pub.name}</h6>
                             <h7> <fmt:message key='Description'/> : ${pub.description}</h7>

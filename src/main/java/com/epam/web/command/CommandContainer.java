@@ -32,11 +32,6 @@ public class CommandContainer {
         commands.put("editPeriodical", new EditPeriodical());
         commands.put("addPeriodical", new AddPeriodicalCommand());
 
-
-
-
-        commands.put("pagination", new Pagination());
-
         commands.put("adminPage" , new AdminPageCommand());
         commands.put("adminProfile", new AdminProfileCommand());
         commands.put("showUsers", new ShowUsersCommand());

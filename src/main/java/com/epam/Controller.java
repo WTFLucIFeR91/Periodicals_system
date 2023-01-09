@@ -38,7 +38,7 @@ public class Controller  extends HttpServlet {
             req.setAttribute("error",e);
         }
 
-        log.debug("Controller_foGet finished");
+        log.debug("Controller_doGet finished");
         req.getRequestDispatcher(address).forward(req,resp);
     }
 

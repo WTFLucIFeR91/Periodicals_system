@@ -185,7 +185,7 @@ public class MySqlPublicationDAO implements PublicationDAO {
             pstmt.setString(++k, periodical.getDescription());
             pstmt.setString(++k, periodical.getLanguage());
             pstmt.setBigDecimal(++k, periodical.getPrice());
-            pstmt.setString(++k, "//");
+            pstmt.setString(++k, periodical.getTitleImgLink());
 
             TopicDAO topicDAO = DaoFactory.createTopicDAO();
             Topic topic = topicDAO.findTopicByName(periodical.getTopic().getName());
@@ -196,7 +196,7 @@ public class MySqlPublicationDAO implements PublicationDAO {
             pstmt.close();
         } catch (SQLException ex) {
             DBManager.getInstance().rollback(con);
-            String message = "Can`t add user";
+            String message = "Can`t add publication";
             log.error(message, ex);
             throw new DBException(message, ex);
         } finally {
@@ -435,6 +435,41 @@ public class MySqlPublicationDAO implements PublicationDAO {
             DBManager.getInstance().close(con);
         }
         return publications;
+    }
+
+    private static final String UPDATE_PUBLICATION_BY_INDEX = "UPDATE `periodicals_system`.`publication` " +
+            "SET `index` = ?,`name` = ?,`description` = ?,`language` = ?,`price` = ?,`img` = ?,`topic_id` = ? " +
+            "WHERE `index` =?;";
+    @Override
+    public void updatePublicationByIndex(String oldPublicationIndex, Publication publication) {
+        PreparedStatement pstmt = null;
+
+        Connection con = null;
+        try {
+            con = getConnection();
+            con.setAutoCommit(false);
+            pstmt = con.prepareStatement(UPDATE_PUBLICATION_BY_INDEX);
+            int k = 0;
+            pstmt.setString(++k,publication.getIndex());
+            pstmt.setString(++k, publication.getName());
+            pstmt.setString(++k, publication.getDescription());
+            pstmt.setString(++k, publication.getLanguage());
+            pstmt.setBigDecimal(++k, publication.getPrice());
+            pstmt.setString(++k, publication.getTitleImgLink());
+            pstmt.setInt(++k,publication.getTopic().getId());
+            pstmt.setString(++k, oldPublicationIndex);
+
+            pstmt.executeUpdate();
+            con.commit();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollback(con);
+            String message = "Can`t update periodical";
+            log.error(message, ex);
+
+        } finally {
+            DBManager.getInstance().close(con);
+        }
     }
 
 
