@@ -1,6 +1,6 @@
 package com.epam.dao.impl.mysql;
 
-import com.epam.dao.DBManager;
+import com.epam.connection.DBManager;
 import com.epam.dao.UserDetailsDAO;
 import com.epam.entity.User;
 import com.epam.entity.UserDetails;

@@ -1,6 +1,6 @@
 package com.epam.dao.impl.mysql;
 
-import com.epam.dao.DBManager;
+import com.epam.connection.DBManager;
 import com.epam.dao.DaoFactory;
 import com.epam.dao.PublicationDAO;
 import com.epam.dao.TopicDAO;

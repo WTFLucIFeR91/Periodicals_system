@@ -1,6 +1,6 @@
 package com.epam.web.listener;
 
-import com.epam.dao.DBManager;
+import com.epam.connection.DBManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
