@@ -3,10 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<form action="${pageContext.request.contextPath}/controller?command=editPeriodical" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form action="${pageContext.request.contextPath}/controller?command=addPeriodical" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 <div class="container" style="width: 500px">
 <div class="container text-center">
-   <h1><fmt:message key='Edit'/></h1>
+   <h1><fmt:message key='Add_periodical'/></h1>
 </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Periodical_name'/> : ${publication.name} </label>
@@ -32,6 +32,7 @@
           <label  class="form-label"><fmt:message key='Topic'/> : ${publication.topic.name}</label>
           <input type="text" name="publicationTopic" class="form-control"  value="${publication.topic.name}" required/>
         </div>
+        </br>
         <div class="mb-0">
                <input type="file" id="file" class="input-file" name="img" accept="image/*" size="50" alt="photo" pattern=".{1,150}">
           </div>
@@ -39,11 +40,8 @@
         <label class="input-button" for="file"><fmt:message key="Download"/>:</label>
         <div class="mb-0">
             <div class="d-flex justify-content-center">
-                <c:if test = "${newImg == null}">
+                <c:if test = "${publication.titleImgLink != null}">
                   <img class="" src="resources/images/${publication.titleImgLink}" width="175" height="230" alt="${publication.name}">
-                </c:if>
-                <c:if test = "${newImg != null}">
-                  <img class="" src="resources/images/${newImg}" width="175" height="230" alt="${newImg}">
                 </c:if>
             </div>
         </div>
