@@ -5,36 +5,44 @@
 <%@ page session="true" %>
 <fmt:setLocale value="${sessionScope.lang}"/>
 
-<header>
+      <header>
           <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
               <div class="container-xl">
-                <a class="navbar-brand" href="controller?command=mainPage"><fmt:message key='Periodicals_system'/></a>
+                <a class="navbar-brand " href="controller?command=clientProfile">${user.userDetails.firstName} ${user.userDetails.lastName}</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarsExample02">
                   <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                      <a class="nav-link disabled" aria-current="page" href="controller?command=login"><fmt:message key='Login'/></a>
+                      <a class="nav-link active" aria-current="page" href="controller?command=mainPage"><fmt:message key='Periodicals_system'/></a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" href="controller?command=signup"><fmt:message key='Signup'/></a>
+                      <a class="nav-link active" aria-current="page" href="controller?command=showSubscriptions"><fmt:message key='Subscriptions'/></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" href="controller?command=topUpBalance"><fmt:message key='Balance'/>: ${user.balance} </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" href="controller?command=logout"><fmt:message key='Logout'/></a>
                     </li>
                   </ul>
                   <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group me-2" role="group" aria-label="First group">
-                      <form class="d-flex" role="search" style="margin-top: 15px;">
-                        <input class="form-control me-2" type="search" placeholder="<fmt:message key='Search'/>" disabled>
-                        <button class="btn btn-outline-light disabled" type="submit"><fmt:message key='Search'/></button>
+                      <form class="d-flex" role="search" style="margin-top: 15px;" action="controller" method="get">
+                        <input class="form-control me-2" type="search" placeholder="<fmt:message key='Search'/>" name="search" required/ disabled>
+                        <input type="hidden" name="command" value="mainPage"/>
+                        <input type="hidden" name="isSearch" value="true"/>
+                        <button class="btn btn-outline-light disabled" type="submit" ><fmt:message key='Search'/></button>
                       </form>
                     </div>
                     <div class="btn-group me-2" role="group" aria-label="Second group">
                       <ul class="navbar-nav me-auto">
 		                 <li class="nav-item">
-                           <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="controller?command=login&sessionLocale=uk">UA</a>
+                           <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="controller?command=updateUser&sessionLocale=uk">UA</a>
                          </li>
                          <li class="nav-item">
-                           <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="controller?command=login&sessionLocale=en">EN</a>
+                           <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="controller?command=updateUser&sessionLocale=en">EN</a>
                          </li>
                       </ul>
                     <div>
@@ -44,9 +52,9 @@
                             <c:set var="selectedType" value="${sortName == 'type' ? 'selected' : '' }"/>
                             <c:set var="selectedName" value="${sortName == 'name' ? 'selected' : '' }"/>
                             <c:set var="selectedPrice" value="${sortName == 'price' ? 'selected' : '' }"/>
-                            <option ${selectedType} value="type"><fmt:message key='Topic'/></option>
-                            <option ${selectedName} value="name"><fmt:message key='Name'/></option>
-                            <option ${selectedPrice} value="price"><fmt:message key='Price'/></option>
+                            <option ${selectedType} value="type"> <fmt:message key='Topic'/></option>
+                            <option ${selectedName} value="name"><fmt:message key='Name'/> </option>
+                            <option ${selectedPrice} value="price"> <fmt:message key='Price'/></option>
                         </select>
                     <input type="hidden" name="command" value="mainPage"/><br/>
                   </form>

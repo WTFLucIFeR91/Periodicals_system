@@ -2,6 +2,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page isELIgnored="false" %>
+<%@ page session="true" %>
+<fmt:setLocale value="${sessionScope.lang}"/>
 
 
 <input type="hidden" name="command" value="signup"/>
@@ -13,12 +16,12 @@
                 </li>
          </div>
          <div class="card-body justify-content-center">
-                <p class="text text-center mb-1">Назва: ${periodical.name}</p>
-                  <p class="text text-center mb-1">Індекс видання: ${periodical.index}</p>
-                  <p class="text text-center mb-1">Тематика: ${periodical.topic.name}</p>
-                  <p class="text text-center mb-1">Опис: ${periodical.description}</p>
-                  <p class="text text-center mb-1">Мова видання: ${periodical.language}</p>
-                  <p class="text text-center mb-1"> Price: ${periodical.price}</p>
+                <p class="text text-center mb-1"><fmt:message key='Name'/>: ${periodical.name}</p>
+                  <p class="text text-center mb-1"><fmt:message key='Index'/>: ${periodical.index}</p>
+                  <p class="text text-center mb-1"><fmt:message key='Topic'/>: ${periodical.topic.name}</p>
+                  <p class="text text-center mb-1"><fmt:message key='Description'/>: ${periodical.description}</p>
+                  <p class="text text-center mb-1"><fmt:message key='Language_of_publication'/>: ${periodical.language}</p>
+                  <p class="text text-center mb-1"> <fmt:message key='Price'/>: ${periodical.price}</p>
          </div>
          <div class="card-body justify-content-center text-center">
            <form action="controller" method="post">

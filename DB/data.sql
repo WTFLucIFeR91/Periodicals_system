@@ -1,6 +1,6 @@
 # user_authorization table
-INSERT INTO `periodicals_system`.`user_authorization` (`email`,`password`,`role`,`status`,`balance`) VALUES('admin@gmail.com','1','admin','active',120.25);
-INSERT INTO `periodicals_system`.`user_authorization` (`email`,`password`,`role`,`status`,`balance`) VALUES('user@gmail.com','2','user','active',50.24);
+INSERT INTO `periodicals_system`.`user_authorization` (`email`,`password`,`role`,`status`,`balance`) VALUES('admin@gmail.com','$argon2i$v=19$m=15360,t=2,p=1$Qm/o5rXYBkkx10iLDB8mYw$FW4cCy49Pgi0TJc7y9+7TF0acqnrkptcUaFs9C6kn6A','admin','active',120.25);
+INSERT INTO `periodicals_system`.`user_authorization` (`email`,`password`,`role`,`status`,`balance`) VALUES('user@gmail.com','$argon2i$v=19$m=15360,t=2,p=1$JsiMNKKlSrFK4xFHjTXWgw$c4UfL7r4v/4LjwQXkod9MjCGMSji8WtYuT4NoMWvWPg','user','active',50.24);
 
 # user_details table
 INSERT INTO `periodicals_system`.`user_details` (`user_authorization_email`,`first_name`,`last_name`,`delivery_address`,`telephone`) VALUES ('admin@gmail.com','Petro','Petrenko','місто Київ проспект Лобоновського 50 квартира 22',80632458965);

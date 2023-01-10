@@ -1,6 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
+<fmt:setLocale value="${cookie['lang'].value}"/>
+<fmt:setBundle basename="resources"/>
+<%@ page session="true" %>
 <!doc type html>
 <html>
   <head>

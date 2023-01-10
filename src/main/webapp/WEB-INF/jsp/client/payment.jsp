@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOC TYPE html>
 <head>
     <meta charset="UTF-8">
@@ -10,7 +11,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <jsp:include page="/WEB-INF/jsp/fragment/headerForSubscription.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/fragment/headerForPayment.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/paymentContent.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/footer.jsp"/>
     <script src="/WEB-INF/jsp/js/bootstrap.bundle.min.js"></script>

@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page isELIgnored="false" %>
+<%@ page session="true" %>
+<fmt:setLocale value="${sessionScope.lang}"/>
 
       <header>
           <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
@@ -34,25 +37,24 @@
                       </form>
                     </div>
                     <div class="btn-group me-2" role="group" aria-label="Second group">
-                      <form  class="d-flex" action="changeLocale.jsp" method="POST">
-                          <select class="form-select" style="margin-top: 15px;" name="locale" onchange="this.form.submit();">
-                             <c:forEach items="${applicationScope.locales}" var="locale">
-                                <c:set var="selected" value="${locale.key == currentLocale ? 'selected' : '' }"/>
-                                    <option value="${locale.key}" ${selected}>${locale.value}</option>
-                                </c:forEach>
-                          </select>
-
-                      </form>
-                    </div>
+                      <ul class="navbar-nav me-auto">
+		                 <li class="nav-item">
+                           <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="controller?command=clientProfile&sessionLocale=uk">UA</a>
+                         </li>
+                         <li class="nav-item">
+                           <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="controller?command=clientProfile&sessionLocale=en">EN</a>
+                         </li>
+                      </ul>
+                    <div>
                     <div class="btn-group"  style="display: inline-flex;" role="group" aria-label="Third group">
                       <form class="d-flex" action="controller" method="get">
                         <select disabled class="form-select" style="margin-top: 15px;" name="sortBy" onchange="this.form.submit();">
                             <c:set var="selectedType" value="${sortName == 'type' ? 'selected' : '' }"/>
                             <c:set var="selectedName" value="${sortName == 'name' ? 'selected' : '' }"/>
                             <c:set var="selectedPrice" value="${sortName == 'price' ? 'selected' : '' }"/>
-                            <option ${selectedType} value="type">Topic</option>
-                            <option ${selectedName} value="name">Name</option>
-                            <option ${selectedPrice} value="price">Price</option>
+                            <option ${selectedType} value="type"> <fmt:message key='Topic'/></option>
+                            <option ${selectedName} value="name"><fmt:message key='Name'/> </option>
+                            <option ${selectedPrice} value="price"> <fmt:message key='Price'/></option>
                         </select>
                     <input type="hidden" name="command" value="mainPage"/><br/>
                   </form>

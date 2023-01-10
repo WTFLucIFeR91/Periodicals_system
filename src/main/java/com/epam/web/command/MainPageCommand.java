@@ -3,6 +3,7 @@ package com.epam.web.command;
 import com.epam.dao.DaoFactory;
 import com.epam.entity.Publication;
 import com.epam.entity.Role;
+import com.epam.entity.Topic;
 import com.epam.exceptions.DBException;
 import com.epam.web.Path;
 import org.apache.logging.log4j.LogManager;
@@ -24,22 +25,24 @@ public class MainPageCommand implements Command {
         HttpSession session = req.getSession();
         String address = Path.PAGE_ERROR;
         List<Publication> publications = null;
-        String isSearch = req.getParameter("isSearch");
 
+        List<Topic> topics = DaoFactory.createTopicDAO().findAllTopics();
+        session.setAttribute("topics", topics);
+
+        String isSearch = req.getParameter("isSearch");
         int page = 1;
-        int recordsPerPage =6;
+        int recordsPerPage = 6;
         int noOfRecords = DaoFactory.createPublicationDAO().findAllPeriodicals().size();
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+
         if (req.getParameter("page") != null)
             page = Integer.parseInt(req.getParameter("page"));
         if (isSearch != null) {
             publications = DaoFactory.createPublicationDAO().findPublicationByName(req.getParameter("search"), (page - 1) * recordsPerPage, recordsPerPage);
             initAttribute(req, publications, page, noOfPages);
-        }  else {
-
+        } else {
             String sortName = req.getParameter("sortBy");
-
-            if(sortName == null || sortName.isEmpty() || sortName.equals("type")){
+            if (sortName == null || sortName.isEmpty() || sortName.equals("type")) {
                 publications = DaoFactory.createPublicationDAO().getPublicationByTopic((page - 1) * recordsPerPage, recordsPerPage);
                 initAttribute(req, publications, page, noOfPages);
 
@@ -48,17 +51,17 @@ public class MainPageCommand implements Command {
             } else if (sortName.equals("name")) {
                 List<Publication> allPublications = DaoFactory.createPublicationDAO().findAllPeriodicals();
                 sortByName(allPublications);
-                if (page == 1){
-                publications = allPublications.subList((page - 1) * recordsPerPage, recordsPerPage);
+                if (page == 1) {
+                    publications = allPublications.subList((page - 1) * recordsPerPage, recordsPerPage);
                 } else {
-                    publications = allPublications.subList((page-1) * recordsPerPage, (page) * recordsPerPage);
+                    publications = allPublications.subList((page - 1) * recordsPerPage, (page) * recordsPerPage);
                 }
                 initAttribute(req, publications, page, noOfPages);
 
                 session.setAttribute("sortName", "name");
 
             } else if (sortName.equals("price")) {
-                 publications = DaoFactory.createPublicationDAO().getPublicationByPrice((page - 1) * recordsPerPage, recordsPerPage);
+                publications = DaoFactory.createPublicationDAO().getPublicationByPrice((page - 1) * recordsPerPage, recordsPerPage);
                 initAttribute(req, publications, page, noOfPages);
 
                 session.setAttribute("sortName", "price");
@@ -79,6 +82,7 @@ public class MainPageCommand implements Command {
         log.debug("MainPageCommand finished");
         return address;
     }
+
     private static void initAttribute(HttpServletRequest req, List<Publication> publications, int page, int noOfPages) {
         req.setAttribute("publications", publications);
         req.setAttribute("noOfPages", noOfPages);
@@ -132,8 +136,6 @@ public class MainPageCommand implements Command {
                 return len1 - len2;
             }
         });
-
-
         return periodicals;
     }
 
