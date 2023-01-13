@@ -1,4 +1,6 @@
-package com.epam.entity;
+package com.epam.entity.Enum;
+
+import com.epam.entity.User;
 
 public enum Status {
 

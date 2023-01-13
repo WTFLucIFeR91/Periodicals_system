@@ -25,4 +25,6 @@ public interface PublicationDAO {
     List<Publication> getPublicationByPrice(int start, int recordsPerPage) throws DBException;
 
     void updatePublicationByIndex(String oldPublicationIndex, Publication publication);
+
+    boolean isPresentIndex(String index) throws DBException;
 }

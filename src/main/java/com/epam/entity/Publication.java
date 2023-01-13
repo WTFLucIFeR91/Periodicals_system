@@ -1,10 +1,11 @@
 package com.epam.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
 
-public class Publication extends Entity {
+public class Publication implements Serializable {
     private String name;
     private String index;
     private String description;

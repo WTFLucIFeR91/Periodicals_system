@@ -4,7 +4,7 @@ import com.epam.connection.DBManager;
 import com.epam.dao.PaymentDAO;
 import com.epam.entity.Payment;
 import com.epam.entity.Subscription;
-import com.epam.entity.SubscriptionStatus;
+import com.epam.entity.Enum.SubscriptionStatus;
 import com.epam.exceptions.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

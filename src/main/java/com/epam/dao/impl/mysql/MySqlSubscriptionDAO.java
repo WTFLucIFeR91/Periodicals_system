@@ -4,6 +4,7 @@ import com.epam.connection.DBManager;
 import com.epam.dao.DaoFactory;
 import com.epam.dao.SubscriptionDAO;
 import com.epam.entity.*;
+import com.epam.entity.Enum.SubscriptionStatus;
 import com.epam.exceptions.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

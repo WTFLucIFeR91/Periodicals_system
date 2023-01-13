@@ -16,9 +16,13 @@
    </div>
      <div class="mb-0">
        <div class="container text-center">
+       <c:set var = "error" scope = "session" value ='<%=(String)session.getAttribute("errorMessage")%>'/>
           <label class="form-label"><fmt:message key='Amount'/></label>
        </div>
-       <input type="number" name="amount" class="form-control text-center" required/>
+       <input type="text" name="amount" class="form-control text-center" required/>
+        <c:if test="${error eq 'error_page_invalid_number'}">
+                             <label  class="form-label"><fmt:message key='${error}'/></label>
+                            </c:if>
      </div>
      <div class="mb-0">
         <div class="container text-center">

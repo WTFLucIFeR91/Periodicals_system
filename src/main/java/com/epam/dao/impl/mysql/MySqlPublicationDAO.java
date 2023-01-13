@@ -472,6 +472,35 @@ public class MySqlPublicationDAO implements PublicationDAO {
         }
     }
 
+    @Override
+    public boolean isPresentIndex(String index) throws DBException {
+        Publication publication = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(FIND_PUBLICATION_BY_INDEX);
+
+            pstmt.setString(1, index);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                publication = extractPublication(rs);
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollback(con);
+            String message = "Can`t find publication by index";
+            log.error(message, ex);
+            throw new DBException(message, ex);
+        } finally {
+            DBManager.getInstance().close(con);
+        }
+        return publication != null;
+    }
+
 
     private Connection getConnection() throws SQLException {
         return DBManager.getInstance().getConnection();

@@ -1,9 +1,10 @@
 package com.epam.web.command.user;
 
 import com.epam.dao.DaoFactory;
-import com.epam.entity.Role;
+import com.epam.entity.Enum.Role;
 import com.epam.entity.User;
 import com.epam.exceptions.DBException;
+import com.epam.util.DataValidator;
 import com.epam.web.Path;
 import com.epam.web.command.Command;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +26,7 @@ public class TopUpBalanceCommand implements Command {
         String methodName = req.getMethod();
         log.trace("input method => " + methodName);
 
-        if (methodName.equals("GET")){
+        if (methodName.equals("GET")) {
             return Path.PAGE_TOP_UP_BALANCE;
         }
 
@@ -33,21 +34,20 @@ public class TopUpBalanceCommand implements Command {
 
         BigDecimal amount = new BigDecimal(req.getParameter("amount"));
         log.trace("amount => " + amount);
-
+        try {
+            DataValidator.validateMoneyAmount(req.getParameter("amount"));
+        } catch (Exception e) {
+            log.error("Exception: " + e.getMessage());
+            req.getSession().setAttribute("errorMessage", e.getMessage());
+            return Path.COMMAND_UPDATE_BALANCE;
+        }
         User user = (User) session.getAttribute("user");
         log.trace("user => " + user);
-
         user.setBalance(user.getBalance().add(amount));
         DaoFactory.createUserDao().updateUser(user);
-
-        session.setAttribute("user",user);
-
-
-
+        session.setAttribute("user", user);
         log.debug("TopUpBalanceCommand finished");
-
+        session.removeAttribute("errorMessage");
         return Path.COMMAND_MAIN_PAGE;
     }
-
-
 }

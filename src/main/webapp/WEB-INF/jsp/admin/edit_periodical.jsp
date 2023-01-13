@@ -13,7 +13,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <jsp:include page="/WEB-INF/jsp/fragment/headerForAdminProfile.jsp"/>
+    <jsp:include page="/WEB-INF/jsp/fragment/headerForEditPeriodical.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/editPeriodicalContent.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/footer.jsp"/>
     <script src="js/bootstrap.bundle.min.js"></script>

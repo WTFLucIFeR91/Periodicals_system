@@ -2,6 +2,8 @@ package com.epam.web.command.user;
 
 import com.epam.dao.DaoFactory;
 import com.epam.entity.*;
+import com.epam.entity.Enum.SubscriptionPeriod;
+import com.epam.entity.Enum.SubscriptionStatus;
 import com.epam.exceptions.DBException;
 import com.epam.web.Path;
 import com.epam.web.command.Command;

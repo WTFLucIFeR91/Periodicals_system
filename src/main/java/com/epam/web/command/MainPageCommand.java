@@ -2,7 +2,7 @@ package com.epam.web.command;
 
 import com.epam.dao.DaoFactory;
 import com.epam.entity.Publication;
-import com.epam.entity.Role;
+import com.epam.entity.Enum.Role;
 import com.epam.entity.Topic;
 import com.epam.exceptions.DBException;
 import com.epam.web.Path;
@@ -37,6 +37,7 @@ public class MainPageCommand implements Command {
 
         if (req.getParameter("page") != null)
             page = Integer.parseInt(req.getParameter("page"));
+
         if (isSearch != null) {
             publications = DaoFactory.createPublicationDAO().findPublicationByName(req.getParameter("search"), (page - 1) * recordsPerPage, recordsPerPage);
             initAttribute(req, publications, page, noOfPages);

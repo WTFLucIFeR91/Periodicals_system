@@ -1,8 +1,9 @@
 package com.epam.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class UserDetails extends Entity{
+public class UserDetails implements Serializable {
     private String firstName;
     private String lastName;
     private String deliveryAddress;

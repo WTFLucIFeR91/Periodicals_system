@@ -11,13 +11,17 @@
 <div class="container text-center">
    <h1><fmt:message key='Edit'/></h1>
 </div>
+<c:set var = "error" scope = "session" value ='<%=(String)session.getAttribute("errorMessage")%>'/>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Periodical_name'/> : ${publication.name} </label>
           <input type="text" name="publicationName" class="form-control" value="${publication.name}" required/>
+                     <c:if test="${error eq 'error_page_invalid_string'}">
+                      <label  class="form-label"><fmt:message key='${error}'/></label>
+                     </c:if>
         </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Publication_index'/> : ${publication.index} </label>
-          <input type="text" name="publicationIndex" class="form-control" value="${publication.index}"  required/>
+          <input disabled type="text" name="publicationIndex" class="form-control" value="${publication.index}"  required/>
         </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Description'/> : ${publication.description}</label>
@@ -29,14 +33,18 @@
         </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Price'/> : ${publication.price}</label>
+
           <input type="text" name="publicationPrice" class="form-control" value="${publication.price}"  required/>
+                     <c:if test="${error eq 'error_page_invalid_number'}">
+                      <label  class="form-label"><fmt:message key='${error}'/></label>
+                     </c:if>
         </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Topic'/> : ${publication.topic.name}</label>
           <input type="text" name="publicationTopic" class="form-control"  value="${publication.topic.name}" required/>
         </div>
         <div class="mb-0">
-               <input type="file" id="file" class="input-file" name="img" accept="image/*" size="50" alt="photo" pattern=".{1,150}">
+               <input type="file" id="file" class="input-file" value='${publication.titleImgLink}' name="img" accept="image/*" size="50" alt="photo" pattern=".{1,150}">
           </div>
         </br>
         <label class="input-button" for="file"><fmt:message key="Download"/>:</label>

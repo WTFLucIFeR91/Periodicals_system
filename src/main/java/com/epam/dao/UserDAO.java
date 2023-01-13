@@ -20,5 +20,8 @@ public interface UserDAO {
 
     int countUsers();
 
-    List<User> findAllUsersForPaginate(int start, int end);
+    List<User> findAllUsersForPaginate(int start, int end) throws DBException;
+
+    boolean emailIsUsing(String email) throws DBException;
+
 }

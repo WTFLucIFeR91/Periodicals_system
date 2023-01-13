@@ -1,7 +1,6 @@
 package com.epam.web.command.user;
 
 import com.epam.dao.DaoFactory;
-import com.epam.entity.Publication;
 import com.epam.entity.Subscription;
 import com.epam.entity.User;
 import com.epam.exceptions.DBException;
@@ -13,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShowSubscriptionsCommand implements Command {

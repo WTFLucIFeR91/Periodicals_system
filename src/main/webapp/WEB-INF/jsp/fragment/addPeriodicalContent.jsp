@@ -12,6 +12,7 @@
 <div class="container text-center">
    <h1><fmt:message key='Add_periodical'/></h1>
 </div>
+<c:set var = "error" scope = "session" value ='<%=(String)session.getAttribute("errorMessage")%>'/>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Periodical_name'/> : ${publication.name} </label>
           <input type="text" name="publicationName" class="form-control" value="${publication.name}" required/>
@@ -19,6 +20,9 @@
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Publication_index'/> : ${publication.index} </label>
           <input type="text" name="publicationIndex" class="form-control" value="${publication.index}"  required/>
+                               <c:if test="${error eq 'this_index_already_used'}">
+                                <label  class="form-label"><fmt:message key='${error}'/></label>
+                               </c:if>
         </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Description'/> : ${publication.description}</label>
@@ -31,6 +35,9 @@
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Price'/> : ${publication.price}</label>
           <input type="text" name="publicationPrice" class="form-control" value="${publication.price}"  required/>
+                               <c:if test="${error eq 'error_page_invalid_number'}">
+                                <label  class="form-label"><fmt:message key='${error}'/></label>
+                               </c:if>
         </div>
         <div class="mb-0">
           <label  class="form-label"><fmt:message key='Topic'/> : ${publication.topic.name}</label>

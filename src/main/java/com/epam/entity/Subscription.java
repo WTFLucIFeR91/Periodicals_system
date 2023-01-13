@@ -1,9 +1,12 @@
 package com.epam.entity;
 
+import com.epam.entity.Enum.SubscriptionStatus;
+
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class Subscription extends Entity {
+public class Subscription implements Serializable {
 
    private String login;
    private String index;

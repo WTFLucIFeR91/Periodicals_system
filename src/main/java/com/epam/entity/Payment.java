@@ -1,10 +1,11 @@
 package com.epam.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class Payment extends Entity{
+public class Payment implements Serializable {
 
     private String login;
     private Integer id;

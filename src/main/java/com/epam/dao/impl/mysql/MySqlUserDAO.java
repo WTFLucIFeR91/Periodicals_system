@@ -3,8 +3,8 @@ package com.epam.dao.impl.mysql;
 import com.epam.connection.DBManager;
 import com.epam.dao.DaoFactory;
 import com.epam.dao.UserDAO;
-import com.epam.entity.Role;
-import com.epam.entity.Status;
+import com.epam.entity.Enum.Role;
+import com.epam.entity.Enum.Status;
 import com.epam.entity.User;
 import com.epam.entity.UserDetails;
 import com.epam.exceptions.DBException;
@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.epam.util.PasswordHashUtil.encode;
@@ -269,6 +270,34 @@ public class MySqlUserDAO implements UserDAO {
         }
         return users;
 
+    }
+
+    private static final String FIND_EMAIL = "SELECT email FROM periodicals_system.user_authorization WHERE email = ?;";
+    @Override
+    public boolean emailIsUsing(String email) throws DBException {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        String res = null;
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(FIND_EMAIL);
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+              res  =  rs.getString("email");
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollback(con);
+            String message = "Can`t find user by email";
+            log.error(message, ex);
+            throw new DBException(message, ex);
+        } finally {
+            DBManager.getInstance().close(con);
+        }
+        return res != null;
     }
 
     private Connection getConnection() {

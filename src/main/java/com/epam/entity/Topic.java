@@ -1,8 +1,9 @@
 package com.epam.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Topic extends Entity{
+public class Topic implements Serializable {
     private Integer id;
     private String name;
 

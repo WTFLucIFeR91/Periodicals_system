@@ -1,5 +1,6 @@
 package com.epam.dao;
 
+import com.epam.dao.*;
 import com.epam.dao.impl.mysql.*;
 
 public class DaoFactory {

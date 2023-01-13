@@ -1,7 +1,7 @@
 package com.epam.web.command.admin;
 
 import com.epam.dao.DaoFactory;
-import com.epam.entity.Status;
+import com.epam.entity.Enum.Status;
 import com.epam.entity.User;
 import com.epam.exceptions.DBException;
 import com.epam.web.Path;

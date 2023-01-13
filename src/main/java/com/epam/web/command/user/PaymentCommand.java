@@ -1,7 +1,6 @@
 package com.epam.web.command.user;
 
-import com.epam.entity.Subscription;
-import com.epam.entity.SubscriptionPeriod;
+import com.epam.entity.Enum.SubscriptionPeriod;
 import com.epam.exceptions.DBException;
 import com.epam.web.Path;
 import com.epam.web.command.Command;

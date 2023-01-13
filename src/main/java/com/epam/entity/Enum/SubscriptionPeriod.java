@@ -1,4 +1,4 @@
-package com.epam.entity;
+package com.epam.entity.Enum;
 
 import java.io.Serializable;
 

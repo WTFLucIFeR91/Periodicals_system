@@ -14,6 +14,10 @@ public final class Path {
 
     public final static String COMMAND_EDIT_PERIODICAL = "/controller?command=editPeriodical";
 
+    public final static String COMMAND_UPDATE_USER = "/controller?command=updateUser";
+    public final static String COMMAND_UPDATE_BALANCE = "/controller?command=topUpBalance";
+    public final static String COMMAND_EDIT_PERIODICAL_CONTROLLER = "/controller?command=editPeriodical&publicationIndex=";
+
     public final static String PAGE_ADMIN = "/WEB-INF/jsp/admin/admin_page.jsp";
     public final static String PAGE_ADMIN_PROFILE = "/WEB-INF/jsp/admin/admin_profile.jsp";
     public final static String PAGE_USERS = "/WEB-INF/jsp/admin/users.jsp";

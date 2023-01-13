@@ -1,10 +1,14 @@
 package com.epam.entity;
 
+import com.epam.entity.Enum.Role;
+import com.epam.entity.Enum.Status;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-public class User extends Entity {
+public class User implements Serializable {
     private String email;
     private  String password;
     private Role role;
