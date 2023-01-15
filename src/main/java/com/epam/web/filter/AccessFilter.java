@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -19,11 +21,15 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/*@WebFilter(filterName = "AccessFilter", servletNames = "Controller", urlPatterns = {"/*"}, initParams = {@WebInitParam(name = "admin", value = "adminPage adminProfile addPeriodical showUsers block unblock addPeriodical editPeriodical deletePeriodical"),
+        @WebInitParam(name = "user", value = "clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance"),
+        @WebInitParam(name = "out-of-control", value = "login signup welcomePage mainPage logout noCommand")})*/
+
 public class AccessFilter implements Filter {
 
     private static final Logger log = LogManager.getLogger(EncodingFilter.class);
 
-    private static Map<Role , List<String>> accessMap = new ConcurrentHashMap<>();
+    private static Map<Role, List<String>> accessMap = new ConcurrentHashMap<>();
     private static List<String> outOfControl = new CopyOnWriteArrayList<>();
 
     @Override
@@ -38,23 +44,22 @@ public class AccessFilter implements Filter {
     }
 
 
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         log.debug("AccessFilter is starting  ");
 
         HttpServletRequest req = (HttpServletRequest) servletRequest;
 
-        if (checkAccess(req, servletResponse)){
+        if (checkAccess(req, servletResponse)) {
             log.debug("access is allowed");
-            filterChain.doFilter(servletRequest,servletResponse);
-        }else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } else {
             log.debug("access is denied");
 
             String errorMassage = "You do not have permission to access the requested resource";
 
             servletRequest.setAttribute("errorMassage", errorMassage);
-            servletRequest.getRequestDispatcher(Path.PAGE_ERROR_ACCESS).forward(servletRequest,servletResponse);
+            servletRequest.getRequestDispatcher(Path.PAGE_ERROR_ACCESS).forward(servletRequest, servletResponse);
         }
     }
 
@@ -64,26 +69,26 @@ public class AccessFilter implements Filter {
         String commandName = req.getParameter("command");
         log.trace("commandName ==> " + commandName);
 
-        if(outOfControl.contains(commandName)){
+        if (outOfControl.contains(commandName)) {
             log.debug("this command does not require access");
             return true;
         }
 
         HttpSession session = req.getSession(false);
 
-        if(session == null){
+        if (session == null) {
             log.debug("session is null");
             return false;
         }
 
         User user = (User) session.getAttribute("user");
-        if (user == null){
+        if (user == null) {
             log.debug("user is null");
             return false;
         }
 
 
-        if (commandName == null || commandName.isEmpty()){
+        if (commandName == null || commandName.isEmpty()) {
             log.debug("command is null");
             return false;
         }
@@ -92,16 +97,16 @@ public class AccessFilter implements Filter {
             user = DaoFactory.createUserDao().findUserByEmail(user.getEmail());
         } catch (DBException e) {
             req.setAttribute("error", e);
-            req.getRequestDispatcher(Path.PAGE_ERROR).forward(req,servletResponse);
+            req.getRequestDispatcher(Path.PAGE_ERROR).forward(req, servletResponse);
         }
 
         log.trace("user =>" + user);
 
         Role userRole = user.getRole();
 
-        if (user.getStatus().getName().equals(Status.BANNED.getName())){
+        if (user.getStatus().getName().equals(Status.BANNED.getName())) {
             log.debug("user is blocked");
-            req.getRequestDispatcher(Path.PAGE_BLOCKED_USER).forward(req,servletResponse);
+            req.getRequestDispatcher(Path.PAGE_BLOCKED_USER).forward(req, servletResponse);
         }
 
         log.debug("user is not blocked");
@@ -116,7 +121,7 @@ public class AccessFilter implements Filter {
     }
 
     private List<String> asList(String str) {
-        List<String > list = new CopyOnWriteArrayList<>();
+        List<String> list = new CopyOnWriteArrayList<>();
         StringTokenizer st = new StringTokenizer(str);
         while (st.hasMoreTokens()) list.add(st.nextToken());
         return list;

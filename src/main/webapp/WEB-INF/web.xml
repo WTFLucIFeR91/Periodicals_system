@@ -25,25 +25,24 @@
   </context-param>
 
   <filter>
-  <filter-name>AccessFilter</filter-name>
-  <filter-class>com.epam.web.filter.AccessFilter</filter-class>
-  <init-param>
-    <param-name>admin</param-name>
-    <param-value>adminPage adminProfile addPeriodical showUsers block unblock addPeriodical editPeriodical deletePeriodical uploadFile</param-value>
-  </init-param>
-  <init-param>
-    <param-name>user</param-name>
-    <param-value>clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance</param-value>
-  </init-param>
-  <init-param>
-    <param-name>out-of-control</param-name>
-    <param-value>login signup welcomePage mainPage logout noCommand</param-value>
-  </init-param>
-</filter>
+    <filter-name>AccessFilter</filter-name>
+    <filter-class>com.epam.web.filter.AccessFilter</filter-class>
+    <init-param>
+      <param-name>admin</param-name>
+      <param-value>adminPage adminProfile addPeriodical showUsers block unblock addPeriodical editPeriodical deletePeriodical </param-value>
+    </init-param>
+    <init-param>
+      <param-name>user</param-name>
+      <param-value>clientPage clientProfile subscribe showSubscriptions updateUser payment paymentForm topUpBalance</param-value>
+    </init-param>
+    <init-param>
+      <param-name>out-of-control</param-name>
+      <param-value>login signup welcomePage mainPage logout noCommand</param-value>
+    </init-param>
+  </filter>
 
-<filter-mapping>
-<filter-name>AccessFilter</filter-name>
-<servlet-name>Controller</servlet-name>
-</filter-mapping>
-
+  <filter-mapping>
+    <filter-name>AccessFilter</filter-name>
+    <servlet-name>Controller</servlet-name>
+  </filter-mapping>
 </web-app>

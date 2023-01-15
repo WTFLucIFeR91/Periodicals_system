@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="mylib" uri="http://com.epam/mylib" %>
 <%@ page isELIgnored="false" %>
 <%@ page session="true" %>
 <fmt:setLocale value="${sessionScope.lang}"/>
@@ -24,30 +25,23 @@
     </tr>
   </thead>
 <c:set var="count" value="0" scope="request" />
+<tbody>
 <c:forEach items="${users}" var="users" varStatus="count">
-  <tbody>
-    <tr>
-      <th scope="row">${count.count}</th>
-      <td>${users.email}</td>
-      <td>${users.role}</td>
-      <td>${users.status}</td>
-      <td>${users.userDetails.firstName}</td>
-      <td>${users.userDetails.lastName}</td>
-      <td>${users.userDetails.telephone}</td>
-      <td>${users.balance}</td>
-      <td>
-                <form class="users-block" action="controller" method="get">
-                                <input type="hidden" name="command" value="block"/>
-                                <input type="hidden" name="userEmail" value="${users.email}"/>
-                                <p><input type="submit" value="<fmt:message key='Block'/>"></p>
-                            </form>
-                            <form class="users-unblock" action="controller" method="get">
-                                <input type="hidden" name="command" value="unblock"/>
-                                <input type="hidden" name="userEmail" value="${users.email}"/>
-                                <p><input type="submit" value="<fmt:message key='Unblock'/>"></p>
-                            </form>
-      </td>
-    </tr>
+
+<mylib:ShowUser user="${users}" count = "${count.count}"/>
+<form class="users-block" action="controller" method="get">
+                                           <input type="hidden" name="command" value="block"/>
+                                           <input type="hidden" name="userEmail" value="${users.email}"/>
+                                           <p><input type="submit" value="<fmt:message key='Block'/>"></p>
+                                       </form>
+                                       <form class="users-unblock" action="controller" method="get">
+                                           <input type="hidden" name="command" value="unblock"/>
+                                           <input type="hidden" name="userEmail" value="${users.email}"/>
+                                           <p><input type="submit" value="<fmt:message key='Unblock'/>"></p>
+                                       </form>
+                 </td>
+               </tr>
+
 </c:forEach>
   </tbody>
 </table>

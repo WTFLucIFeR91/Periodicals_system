@@ -6,7 +6,7 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(filterName = "SessionLocaleFilter", urlPatterns = {"/*"},initParams = @WebInitParam(name = "defaultLocale",value = "en"))
+@WebFilter(filterName = "SessionLocaleFilter", urlPatterns = {"/*"},initParams = @WebInitParam(name = "defaultLocale",value = "ua"))
 public class SessionLocaleFilter implements Filter {
 private String defaultLocale;
 

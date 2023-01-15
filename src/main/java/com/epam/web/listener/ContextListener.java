@@ -1,15 +1,12 @@
 package com.epam.web.listener;
 
-import com.epam.connection.DBManager;
+import com.epam.dao.connection.DBManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Properties;
+
 @WebListener
 public class ContextListener implements ServletContextListener {
     @Override
