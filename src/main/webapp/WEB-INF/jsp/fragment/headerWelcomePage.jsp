@@ -4,8 +4,6 @@
 <%@ page isELIgnored="false" %>
 <%@ page session="true" %>
 <fmt:setLocale value="${sessionScope.lang}"/>
-
-
 <header>
           <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
               <div class="container-xl">
@@ -16,21 +14,12 @@
                 <div class="collapse navbar-collapse" id="navbarsExample02">
                   <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="controller?command=login"><fmt:message key='Login'/></a>
+                      <a class="nav-link active" aria-current="page" href="login.jsp"><fmt:message key='Login'/></a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" href="controller?command=signup"><fmt:message key='Signup'/></a>
+                      <a class="nav-link active" href="signup.jsp"><fmt:message key='Signup'/></a>
                     </li>
                   </ul>
-                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group me-2" role="group" aria-label="First group">
-                      <form class="d-flex" role="search" style="margin-top: 15px;" action="controller" method="get">
-                        <input class="form-control me-2" type="search" placeholder="<fmt:message key='Search'/>" name="search" disabled required>
-                        <input type="hidden" name="command" value="mainPage"/>
-                        <input type="hidden" name="isSearch" value="true"/>
-                        <button class="btn btn-outline-light disabled" type="submit"><fmt:message key='Search'/></button>
-                      </form>
-                    </div>
                     <div class="btn-group me-2" role="group" aria-label="Second group">
                       <ul class="navbar-nav me-auto">
 		                 <li class="nav-item">
@@ -40,19 +29,7 @@
                            <a class="nav-link active" style="margin-top: 15px;" aria-current="page" href="?sessionLocale=en">EN</a>
                          </li>
                       </ul>
-                    <div>  
-                    <div class="btn-group"  style="display: inline-flex;" role="group" aria-label="Third group">
-                      <form class="d-flex" action="controller" method="get">
-                        <select disabled class="form-select" style="margin-top: 15px;" name="sortBy" onchange="this.form.submit();">
-                            <c:set var="selectedType" value="${sortName == 'type' ? 'selected' : '' }"/>
-                            <c:set var="selectedName" value="${sortName == 'name' ? 'selected' : '' }"/>
-                            <c:set var="selectedPrice" value="${sortName == 'price' ? 'selected' : '' }"/>
-                            <option ${selectedType} value="type"><fmt:message key='Topic'/></option>
-                            <option ${selectedName} value="name"><fmt:message key='Name'/></option>
-                            <option ${selectedPrice} value="price"><fmt:message key='Price'/></option>
-                        </select>
-                    <input type="hidden" name="command" value="mainPage"/><br/>
-                  </form>
+                    <div>
                     </div>
                   </div>
                 </div>

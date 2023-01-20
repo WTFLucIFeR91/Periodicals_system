@@ -15,6 +15,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<c:set var="href" scope="request" value=""/>
     <jsp:include page="/WEB-INF/jsp/fragment/headerWelcomePage.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/welcomePageContent.jsp"/>
     <jsp:include page="/WEB-INF/jsp/fragment/footer.jsp"/>
